@@ -1,0 +1,251 @@
+/*
+  Programmer: Innocent Niyibizi
+  File: arraylist.hpp
+  Date: 2/20/17
+  Class: 1510 - B
+  Instuctor: Taylor
+  Description: Create hpp to implement the LinkedList class
+*/
+#include <iostream>
+using namespace std;
+
+template <typename T>
+LinkedList<T>::LinkedList()
+{
+  m_head = NULL;
+  m_back = NULL;
+  m_size=0;
+}
+
+template <typename T>
+LinkedList<T>::~LinkedList()
+{
+  clear();
+}
+
+template <typename T>
+LinkedList<T>:: LinkedList(const LinkedList<T>& rhs)
+{
+  m_size = rhs.size();
+  Node<T>* rhsCursor = rhs.m_head;
+  Node<T>* cursor = new Node<T>(rhsCursor->m_data, NULL);
+  rhsCursor = rhsCursor->m_next;
+  m_head = cursor;
+  while(rhsCursor!=NULL)
+  {
+    cout<<cursor->m_data<<endl;
+    cursor->m_next = new Node<T>(rhsCursor->m_data, cursor->m_next);
+    cursor = cursor-> m_next;
+    rhsCursor = rhsCursor->m_next;
+  }
+  delete cursor;
+  delete rhsCursor;
+}
+
+template <typename T>
+const LinkedList<T>& LinkedList<T>::operator=(const LinkedList<T>& rhs)
+{
+  const Node<T>* cursor = rhs.getFirstPtr();
+  while(cursor->m_next != NULL)
+  {
+  insertBack(cursor->m_data);
+  cursor = cursor->m_next;
+  }
+  return *this;
+}
+
+template <typename T>
+int LinkedList<T>::size() const
+{
+  return m_size;
+}
+
+template <typename T>
+bool LinkedList<T>::isEmpty() const
+{
+  if(m_head == NULL)
+  {
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
+
+template <typename T>
+Node<T>* LinkedList<T>:: getFirstPtr()
+{
+  return m_head;
+}
+
+template <typename T>
+const Node<T>* LinkedList<T>:: getFirstPtr() const
+{
+  return m_head;
+}
+
+template <typename T>
+Node<T>* LinkedList<T>:: getLastPtr()
+{
+  if(isEmpty())
+    return NULL;
+  else
+  {
+    Node<T>* lastPoint = m_head;
+    while(lastPoint!=m_back)
+    {
+      lastPoint = lastPoint->m_next;
+    }
+    return lastPoint;
+  }
+}
+
+template <typename T>
+Node<T>* LinkedList<T>:: getAtPtr(int i)
+{
+  if(m_size<i)
+  {
+    return NULL;
+  }
+  else
+  {
+    Node<T> cursor = m_head;
+    for(int j = 0; j<i; i++)
+    {
+      cursor = cursor->m_next;
+    }
+    return cursor;
+  }
+}
+
+template <typename T>
+void LinkedList<T>::clear()
+{
+  Node<T>* temp = m_head;
+  while(temp != NULL)
+  {
+    temp = temp -> m_next;
+    delete temp;
+  }
+  delete temp;
+  delete m_head;
+  delete m_back;
+  m_head = m_back = NULL;
+  m_size = 0;
+}
+
+template <typename T>
+void LinkedList<T>:: insert_front(const T& x)
+{
+  Node<T>* newNode = new Node<T>(x, m_head);
+  m_head = newNode;
+  m_size++;
+  return;
+}
+
+template <typename T>
+void LinkedList<T>:: insert_back(const T& x)
+{
+  Node<T>* newBack = new Node<T>(x, NULL);
+  Node<T>* pointToBack = m_head;
+  while(pointToBack->m_next!=NULL)
+  {
+    pointToBack = pointToBack->m_next;
+  }
+  m_back = newBack;
+  pointToBack->m_next = m_back;
+  m_size++;
+  return;
+}
+
+template <typename T>
+void LinkedList<T>::insert(const T& x, Node<T>* poz)
+{
+  Node<T>* temp = new Node<T>;
+  temp -> m_data = poz -> m_data;
+  temp -> next = poz -> next;
+  poz -> data = x;
+  poz -> next = temp;
+  m_size++;
+  delete temp;
+  return;
+}
+
+//Use get node pointer functions?
+template <typename T>
+void LinkedList<T>::remove_front()
+{
+  Node<T>* removal;
+  removal = m_head;
+  m_head = removal -> m_next;
+  delete removal;
+  m_size--;
+  return;
+}
+
+template <typename T>
+void LinkedList<T>::remove_back()
+{
+  Node<T>* removal = m_back;
+  Node<T>* temp = m_head;
+  while (temp->m_next != m_back)
+  {
+    temp = temp->m_next;
+  }
+  delete removal;
+  temp->m_next = NULL;
+  m_back = temp;
+  m_size--;
+  return;
+}
+
+template <typename T>
+void LinkedList<T>::remove(Node<T>* pos)
+{
+  Node<T>* cursor = m_head;
+  while(cursor!=pos)
+  {
+    cursor = cursor -> m_next;
+  }
+  return;
+}
+
+template <typename T>
+bool LinkedList<T>:: operator ==(const LinkedList<T>& rhs) const
+{
+  if(rhs.size() != m_size)
+    return false;
+  else
+  {
+    Node<T>* leftCursor = m_head;
+    const Node<T>* rightCursor = rhs.getFirstPtr();
+    while(leftCursor != NULL)
+    {
+      if(leftCursor->m_data != rightCursor->m_data)
+      {
+        return false;
+      }
+      else
+      {
+        leftCursor = leftCursor->m_next;
+        rightCursor = rightCursor->m_next;
+      }
+    }
+    return true;
+  }
+}
+
+template <typename T>
+std::ostream& operator<< (std::ostream& out, const LinkedList<T>& list)
+{
+  const Node<T>* cursor = list.getFirstPtr();
+  out<<"< ";
+  while(cursor != NULL)
+  {
+    out<<cursor->m_data<<", ";
+    cursor = cursor -> m_next;
+  }
+  out<<" >";
+  return out;
+}

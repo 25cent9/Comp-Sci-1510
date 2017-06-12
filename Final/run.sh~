@@ -1,0 +1,4 @@
+#!/bin/bash
+/Volumes/inrkb/cs1510/Final/run.sh
+fg++ *.cpp
+a.out < input.txt

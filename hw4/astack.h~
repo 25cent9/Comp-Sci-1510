@@ -1,0 +1,100 @@
+/*
+  Programmer: Innocent Niyibizi
+  File: astack.cpp
+  Date: 3/5/17
+  Class: 1510 - B
+  Instuctor: Taylor
+  Description: Templated header file for an arraylist clas that inhereits the
+                abstractstack class
+*/
+
+#ifndef ASTACK_H
+#define ASTACK_H
+#include "abstractstack.h"
+
+template <typename T>
+class AStack: public AbstractStack<T>
+{
+private:
+  int maxSize;
+  int topIndex;
+  T *itemArray;
+public:
+
+  AStack()
+  {
+    maxSize = 8;
+    topIndex = 0;
+    itemArray = new T[maxSize];
+  }
+  AStack(int size)
+  {
+    maxSize = size;
+    topIndex = 0;
+    itemArray = new T[size];
+  }
+
+  ~AStack()
+  {
+    clear();
+    delete [] itemArray;
+    itemArray = NULL;
+  }
+
+  void clear()
+  {
+    topIndex = 0;
+    return;
+  }
+
+  bool isEmpty() const
+  {
+    return (topIndex==0)?true:false;
+  }
+
+  void pop()
+  {
+    topIndex--;
+    return;
+  }
+
+  void push(const T& item)
+  {
+    itemArray[topIndex++] = item;
+    if(topIndex==maxSize)
+      grow();
+    return;
+  }
+
+  const T& top() const throw (Oops)
+  {
+    T returnVal;
+    try
+    {
+      returnVal = itemArray[topIndex-1];
+      throw Oops("The stack is empty");
+      returnVal;
+    }
+    catch(Oops e)
+    {
+      cout<<e.getMsg()<<endl;
+    }
+    //return returnVal;
+  }
+
+  void grow()
+  {
+    int newSize = maxSize*2;
+    T* newM_data = new T[newSize];
+    maxSize = newSize;
+    for(int i=0; i<topIndex; i++)
+    {
+      newM_data[i] = itemArray[i];
+    }
+    delete []itemArray;
+    itemArray = newM_data;
+    return;
+  }
+};
+
+#endif

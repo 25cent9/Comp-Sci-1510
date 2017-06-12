@@ -1,0 +1,17 @@
+BYOYTMYBKK
+BBYOBBPOM
+OTOBYOTTYOM
+TBTBTTBTO
+MYYBYYYO
+append 0 BKBY
+trim 1 6
+clip 2 3 6
+slice 3 3 6
+print
+copy 4 3
+swap 0 6 1 4
+transcribe 2
+print
+trim 6 1 2
+append 3 POKABC
+slice 4 5 15
